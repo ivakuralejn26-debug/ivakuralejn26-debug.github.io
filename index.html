@@ -1,1 +1,177 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ДОСЬЕ // Шаблон квенты</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=PT+Serif:ital@0;1&display=swap');
 
+  :root{
+    --void:#0A0A0B;
+    --panel:#131315;
+    --line:#3A2020;
+    --paper:#D9D4C9;
+    --red:#B4292E;
+    --red-dim:#5C1518;
+    --dim:#8A7F72;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--void);
+    color:var(--paper);
+    font-family:'PT Serif', Georgia, serif;
+    line-height:1.6;
+  }
+  .term{
+    font-family:'Share Tech Mono', monospace;
+    letter-spacing:0.02em;
+  }
+
+  /* scanline texture */
+  body::before{
+    content:"";
+    position:fixed; inset:0; pointer-events:none; z-index:50;
+    background:repeating-linear-gradient(
+      to bottom, rgba(0,0,0,0.12) 0px, rgba(0,0,0,0.12) 1px, transparent 1px, transparent 3px
+    );
+    mix-blend-mode:multiply;
+  }
+
+  .sheet{max-width:760px; margin:0 auto; padding:48px 24px 80px;}
+
+  .stamp-row{
+    display:flex; justify-content:space-between; align-items:flex-start;
+    border-bottom:1px solid var(--line); padding-bottom:16px; margin-bottom:32px;
+    font-size:12px; color:var(--dim);
+  }
+  .stamp-row .id{color:var(--red);}
+
+  .title-block{margin-bottom:44px;}
+  .title-block .over{
+    font-size:12px; color:var(--red); margin-bottom:10px;
+  }
+  .title-block h1{
+    font-size:38px; font-weight:400; letter-spacing:-0.01em;
+    font-style:italic; color:var(--paper);
+  }
+
+  .field-grid{
+    display:grid; grid-template-columns:140px 1fr;
+    border:1px solid var(--line); margin-bottom:40px;
+  }
+  .field-grid .k, .field-grid .v{
+    padding:12px 16px; font-size:14px;
+    border-bottom:1px solid var(--line);
+  }
+  .field-grid .k{
+    color:var(--dim); font-size:11px;
+    display:flex; align-items:center;
+  }
+  .field-grid .v{color:var(--paper);}
+  .field-grid .row:last-child .k, .field-grid .row:last-child .v{border-bottom:none;}
+  .field-grid{display:block;}
+  .frow{display:grid; grid-template-columns:140px 1fr; border-bottom:1px solid var(--line);}
+  .frow:last-child{border-bottom:none;}
+  .frow .k{padding:12px 16px; font-size:11px; color:var(--dim); border-right:1px solid var(--line); display:flex; align-items:center;}
+  .frow .v{padding:12px 16px; font-size:14px;}
+  .status-alive{color:#8CA87C;}
+  .status-dead{color:var(--red);}
+
+  section{margin-bottom:44px;}
+  .sec-head{
+    font-size:12px; color:var(--red); margin-bottom:14px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .sec-head::after{
+    content:""; flex:1; height:1px; background:var(--line);
+  }
+  .body-text{font-size:15px; color:var(--paper); max-width:640px;}
+  .body-text.placeholder{color:var(--dim); font-style:italic;}
+
+  .item-list{list-style:none;}
+  .item-list li{
+    padding:10px 0; border-bottom:1px solid var(--line);
+    font-size:14px; display:flex; gap:14px; align-items:baseline;
+  }
+  .item-list li:last-child{border-bottom:none;}
+  .item-list .num{color:var(--red); font-size:11px; width:18px; flex-shrink:0;}
+
+  footer{
+    border-top:1px solid var(--line); padding-top:20px;
+    font-size:11px; color:var(--dim); display:flex; justify-content:space-between;
+  }
+
+  @media(max-width:560px){
+    .title-block h1{font-size:28px;}
+    .frow{grid-template-columns:110px 1fr;}
+  }
+</style>
+</head>
+<body>
+
+<div class="sheet">
+
+  <div class="stamp-row term">
+    <span>ARCHIVE ACCESS · RESTRICTED</span>
+    <span class="id">REC-000</span>
+  </div>
+
+  <div class="title-block">
+    <div class="over term">// ДОСЬЕ</div>
+    <h1>Имя персонажа</h1>
+  </div>
+
+  <div class="field-grid">
+    <div class="frow">
+      <div class="k term">СТАТУС</div>
+      <div class="v status-alive">Жив</div>
+    </div>
+    <div class="frow">
+      <div class="k term">ОБОЛОЧКА</div>
+      <div class="v">Реплика / Гештальт</div>
+    </div>
+    <div class="frow">
+      <div class="k term">ФРАКЦИЯ</div>
+      <div class="v">Указать фракцию</div>
+    </div>
+    <div class="frow">
+      <div class="k term">ВОЗРАСТ</div>
+      <div class="v">—</div>
+    </div>
+  </div>
+
+  <section>
+    <div class="sec-head term">ВНЕШНОСТЬ</div>
+    <p class="body-text placeholder">Описание внешности персонажа на текущий момент — не обязательно копировать формулировки с сервера, важно передать общее впечатление и характерные детали.</p>
+  </section>
+
+  <section>
+    <div class="sec-head term">ХАРАКТЕР</div>
+    <p class="body-text placeholder">Ключевые черты, привычки, то, как персонаж держится в разговоре и в конфликте.</p>
+  </section>
+
+  <section>
+    <div class="sec-head term">ПРЕДЫСТОРИЯ</div>
+    <p class="body-text placeholder">Краткая биография до начала событий — откуда персонаж, что привело его к текущему статусу.</p>
+  </section>
+
+  <section>
+    <div class="sec-head term">СТАРТОВЫЕ ПРЕДМЕТЫ</div>
+    <ul class="item-list">
+      <li><span class="num term">01</span> Предмет 1</li>
+      <li><span class="num term">02</span> Предмет 2</li>
+      <li><span class="num term">03</span> Предмет 3</li>
+      <li><span class="num term">04</span> Предмет 4</li>
+    </ul>
+  </section>
+
+  <footer class="term">
+    <span>SIGNALIS // КВЕНТА</span>
+    <span>END OF FILE</span>
+  </footer>
+
+</div>
+
+</body>
+</html>
