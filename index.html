@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Квенты/Анкеты Молочного Пидора</title>
+<title>ДОСЬЕ // Архив</title>
 <link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&family=PT+Serif:ital@0;1&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -52,15 +52,9 @@ body{
   width:100%;
   margin:0 auto;
 }
-
-/* ── POWER LED ── */
 .power-led{
-  position:absolute;
-  bottom:16px;
-  left:32px;
-  width:8px;
-  height:8px;
-  border-radius:50%;
+  position:absolute; bottom:16px; left:32px;
+  width:8px; height:8px; border-radius:50%;
   background:#FF6600;
   box-shadow:0 0 6px #FF6600, 0 0 14px rgba(255,102,0,0.5);
   animation: led-pulse 3s ease-in-out infinite;
@@ -78,41 +72,25 @@ body{
   overflow:hidden;
   animation:power-on 1.2s ease-out;
 }
-
-/* ── SCANLINES ── */
 .crt-screen::before{
-  content:"";
-  position:absolute; inset:0;
+  content:""; position:absolute; inset:0;
   pointer-events:none; z-index:10;
   background:repeating-linear-gradient(
     to bottom,
-    rgba(0,0,0,0.2) 0px,
-    rgba(0,0,0,0.2) 1px,
-    transparent 1px,
-    transparent 2px
+    rgba(0,0,0,0.2) 0px, rgba(0,0,0,0.2) 1px,
+    transparent 1px, transparent 2px
   );
 }
-
-/* ── VIGNETTE ── */
 .crt-screen::after{
-  content:"";
-  position:absolute; inset:0;
+  content:""; position:absolute; inset:0;
   pointer-events:none; z-index:11;
   box-shadow:inset 0 0 100px rgba(0,0,0,0.6), inset 0 0 200px rgba(0,0,0,0.3);
   border-radius:12px;
 }
-
-/* ── FLICKER ── */
 @keyframes flicker{
-  0%,100%{opacity:1;}
-  92%{opacity:1;}
-  93%{opacity:0.88;}
-  94%{opacity:1;}
-  96%{opacity:0.93;}
-  97%{opacity:1;}
+  0%,100%{opacity:1;} 92%{opacity:1;} 93%{opacity:0.88;}
+  94%{opacity:1;} 96%{opacity:0.93;} 97%{opacity:1;}
 }
-
-/* ── POWER ON ── */
 @keyframes power-on{
   0%{transform:scaleY(0.005) scaleX(0.2); filter:brightness(10);}
   20%{transform:scaleY(0.005) scaleX(0.9); filter:brightness(6);}
@@ -120,8 +98,6 @@ body{
   60%{transform:scaleY(1) scaleX(1); filter:brightness(2);}
   100%{transform:scaleY(1) scaleX(1); filter:brightness(1);}
 }
-
-/* ── SWITCH GLITCH (смена досье) ── */
 @keyframes switch-glitch{
   0%{opacity:0; transform:translateX(-6px) skewX(4deg); filter:brightness(3);}
   30%{opacity:0.7; transform:translateX(4px) skewX(-2deg); filter:brightness(1.8);}
@@ -131,10 +107,7 @@ body{
 #dossier.switching{animation:switch-glitch 0.35s ease-out;}
 
 /* ── CONTENT ── */
-.sheet{
-  padding:40px 32px 56px;
-  animation:flicker 4s infinite;
-}
+.sheet{padding:40px 32px 56px; animation:flicker 4s infinite;}
 .stamp-row{
   display:flex; justify-content:space-between; align-items:flex-start;
   border-bottom:1px solid var(--line); padding-bottom:16px; margin-bottom:24px;
@@ -142,7 +115,7 @@ body{
 }
 .stamp-row .id{color:var(--red); text-shadow:0 0 4px rgba(255,102,51,0.4);}
 
-/* ── ROSTER (выбор персонажа) ── */
+/* ── ROSTER ── */
 .roster{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:32px;}
 .roster a{
   font-size:16px; padding:2px 12px; color:var(--dim);
@@ -151,16 +124,32 @@ body{
 .roster a:hover{color:var(--amber); border-color:var(--amber-dim);}
 .roster a.active{background:var(--amber); color:var(--screen-bg); text-shadow:none;}
 
-.title-block{margin-bottom:44px;}
+/* ── PROFILE: фото + шапка ── */
+.profile{
+  display:grid; grid-template-columns:200px 1fr; gap:28px;
+  align-items:start; margin-bottom:44px;
+}
+.photo{
+  border:1px solid var(--line); aspect-ratio:3/4;
+  background:#0e0b03; overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+}
+.photo img{
+  width:100%; height:100%; object-fit:cover; display:block;
+  filter:sepia(0.55) saturate(1.2) contrast(1.05) brightness(0.9);
+}
+.photo.empty span{font-size:16px; color:var(--dim); text-shadow:none; text-align:center;}
+
+.title-block{margin-bottom:28px;}
 .title-block .over{
   font-size:12px; color:var(--red); margin-bottom:10px;
   text-shadow:0 0 4px rgba(255,102,51,0.4);
 }
 .title-block h1{
-  font-size:58px; font-weight:400; letter-spacing:-0.01em;
-  font-style:italic; color:var(--paper);
+  font-size:48px; line-height:1.1; font-weight:400; letter-spacing:-0.01em;
+  font-style:italic; color:var(--paper); overflow-wrap:anywhere;
 }
-.field-grid{display:block; margin-bottom:40px; border:1px solid var(--line);}
+.field-grid{border:1px solid var(--line);}
 .frow{display:grid; grid-template-columns:140px 1fr; border-bottom:1px solid var(--line);}
 .frow:last-child{border-bottom:none;}
 .frow .k{
@@ -171,24 +160,19 @@ body{
 .frow .v{padding:12px 16px; font-size:17px;}
 .status-alive{color:#8CA87C; text-shadow:0 0 4px rgba(140,168,124,0.4);}
 .status-dead{color:var(--red); text-shadow:0 0 4px rgba(255,102,51,0.4);}
+
 section{margin-bottom:44px;}
 .sec-head{
   font-size:12px; color:var(--red); margin-bottom:14px;
   display:flex; align-items:center; gap:10px;
   text-shadow:0 0 4px rgba(255,102,51,0.4);
 }
-.sec-head::after{
-  content:""; flex:1; height:1px; background:var(--line);
-}
-.body-text{font-size:18px; color:var(--paper); max-width:640px;}
+.sec-head::after{content:""; flex:1; height:1px; background:var(--line);}
+.body-text{font-size:18px; color:var(--paper); max-width:640px; margin-bottom:12px;}
 .body-text.placeholder{color:var(--dim); font-style:italic;}
-.item-list{list-style:none;}
-.item-list li{
-  padding:10px 0; border-bottom:1px solid var(--line);
-  font-size:14px; display:flex; gap:14px; align-items:baseline;
-}
-.item-list li:last-child{border-bottom:none;}
-.item-list .num{color:var(--red); font-size:11px; width:18px; flex-shrink:0;}
+
+.msg{font-size:18px; color:var(--dim); padding:24px 0;}
+
 footer{
   border-top:1px solid var(--line); padding-top:20px;
   font-size:11px; color:var(--dim); display:flex; justify-content:space-between;
@@ -196,7 +180,9 @@ footer{
 @media(max-width:560px){
   .crt-monitor{padding:16px 16px 40px; border-radius:12px;}
   .sheet{padding:24px 16px 32px;}
-  .title-block h1{font-size:40px;}
+  .profile{grid-template-columns:1fr; gap:20px;}
+  .photo{max-width:200px;}
+  .title-block h1{font-size:36px;}
   .frow{grid-template-columns:110px 1fr;}
 }
 </style>
@@ -226,90 +212,112 @@ footer{
 </div>
 
 <script>
-/* ───────────────────────────────────────────────
-   ДОБАВЛЯЙ ПЕРСОНАЖЕЙ СЮДА.
-   slug  — латиницей, идёт в ссылку (#gary)
-   alive — true/false, меняет цвет статуса
-   fields   — любые пары [ключ, значение]
-   sections — любые блоки с заголовком и текстом
-   ─────────────────────────────────────────────── */
-const CHARACTERS = [
-  {
-    slug: 'gary',
-    id: 'REC-000',
-    name: 'Гари Менгель',
-    alive: true,
-    status: 'Жив(к сожалению)',
-    fields: [
-      ['ОБОЛОЧКА', 'Гештальт'],
-      ['ФРАКЦИЯ', 'Штрафник']
-    ],
-    sections: [
-      { title: 'ПРЕДЫСТОРИЯ', text: 'Украл сухпаек из за чего попал в штрафники', placeholder: true }
-    ]
-  },
-  {
-    slug: 'second',
-    id: 'REC-001',
-    name: 'Скоро',
-    alive: false,
-    status: 'Скоро',
-    fields: [
-      ['ФРАКЦИЯ', '...']
-    ],
-    sections: [
-      { title: 'ПРЕДЫСТОРИЯ', text: '...', placeholder: true }
-    ]
-  }
-];
+const BASE = 'characters/';
 
 const roster  = document.getElementById('roster');
 const dossier = document.getElementById('dossier');
 const recId   = document.getElementById('rec-id');
 
-// кнопки выбора
-roster.innerHTML = CHARACTERS
-  .map(c => `<a href="#${c.slug}" data-slug="${c.slug}">${c.name}</a>`)
-  .join('');
+let list = []; // [{ slug, data }]
+
+// защита от вставки HTML из анкет
+const esc = s => String(s ?? '').replace(/[&<>"']/g, ch => (
+  { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[ch]
+));
+// переносы строк в тексте -> отдельные абзацы
+const paragraphs = (text, cls) =>
+  esc(text).split(/\n+/).map(p => `<p class="body-text${cls}">${p}</p>`).join('');
+
+async function loadJSON(url) {
+  const r = await fetch(url, { cache: 'no-cache' });
+  if (!r.ok) throw new Error(url + ' → ' + r.status);
+  return r.json();
+}
+
+async function init() {
+  try {
+    const slugs = (await loadJSON(BASE + 'index.json'))
+      .filter(s => /^[\w-]+$/.test(s));
+
+    const results = await Promise.allSettled(
+      slugs.map(slug => loadJSON(`${BASE}${slug}/data.json`).then(data => ({ slug, data })))
+    );
+    results.forEach((r, i) => {
+      if (r.status === 'fulfilled') list.push(r.value);
+      else console.warn('Не загрузилась анкета:', slugs[i], r.reason);
+    });
+  } catch (e) {
+    console.error(e);
+  }
+
+  if (!list.length) {
+    dossier.innerHTML = '<p class="msg term">// АРХИВ ПУСТ ИЛИ НЕДОСТУПЕН</p>';
+    return;
+  }
+
+  roster.innerHTML = list
+    .map(({ slug, data }) => `<a href="#${esc(slug)}" data-slug="${esc(slug)}">${esc(data.name)}</a>`)
+    .join('');
+
+  window.addEventListener('hashchange', () => show(location.hash.slice(1)));
+  show(location.hash.slice(1));
+}
 
 function show(slug) {
-  const c = CHARACTERS.find(x => x.slug === slug) || CHARACTERS[0];
+  const entry = list.find(x => x.slug === slug) || list[0];
+  const { data: c } = entry;
 
-  recId.textContent = c.id;
+  recId.textContent = c.id || '';
   roster.querySelectorAll('a').forEach(a =>
-    a.classList.toggle('active', a.dataset.slug === c.slug));
+    a.classList.toggle('active', a.dataset.slug === entry.slug));
 
   const rows = [
     `<div class="frow">
        <div class="k term">СТАТУС</div>
-       <div class="v ${c.alive ? 'status-alive' : 'status-dead'}">${c.status}</div>
+       <div class="v ${c.alive ? 'status-alive' : 'status-dead'}">${esc(c.status)}</div>
      </div>`,
-    ...c.fields.map(([k, v]) =>
-      `<div class="frow"><div class="k term">${k}</div><div class="v">${v}</div></div>`)
+    ...(c.fields || []).map(([k, v]) =>
+      `<div class="frow"><div class="k term">${esc(k)}</div><div class="v">${esc(v)}</div></div>`)
   ].join('');
 
-  const sections = c.sections.map(s => `
+  const sections = (c.sections || []).map(s => `
     <section>
-      <div class="sec-head term">${s.title}</div>
-      <p class="body-text${s.placeholder ? ' placeholder' : ''}">${s.text}</p>
+      <div class="sec-head term">${esc(s.title)}</div>
+      ${paragraphs(s.text, s.placeholder ? ' placeholder' : '')}
     </section>`).join('');
 
   dossier.innerHTML = `
-    <div class="title-block">
-      <div class="over term">// ДОСЬЕ</div>
-      <h1>${c.name}</h1>
+    <div class="profile">
+      <div class="photo empty" id="photo"><span class="term">[ НЕТ ФОТО ]</span></div>
+      <div>
+        <div class="title-block">
+          <div class="over term">// ДОСЬЕ</div>
+          <h1>${esc(c.name)}</h1>
+        </div>
+        <div class="field-grid">${rows}</div>
+      </div>
     </div>
-    <div class="field-grid">${rows}</div>
     ${sections}`;
 
-  // перезапуск глитч-анимации при смене досье
+  // фото: если файл указан и грузится — подменяем заглушку
+  if (c.photo) {
+    const img = new Image();
+    const box = document.getElementById('photo'); // именно этот блок, а не будущий
+    img.alt = c.name || '';
+    img.onload = () => {
+      box.classList.remove('empty');
+      box.replaceChildren(img);
+    };
+    img.src = `${BASE}${entry.slug}/${encodeURIComponent(c.photo)}`;
+  }
+
+  // глитч при смене досье
   dossier.classList.remove('switching');
   void dossier.offsetWidth;
   dossier.classList.add('switching');
 }
 
-window.addEventListener('hashchange', () => show(location.hash.slice(1)));
-show(location.hash.slice(1));
+init();
 </script>
 
 </body>
