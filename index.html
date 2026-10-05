@@ -37,7 +37,7 @@ body{
   text-shadow:0 0 4px var(--amber-glow), 0 0 12px rgba(255,140,0,0.3);
 }
 
-/* ── CRT MONITOR BEZEL ── */
+
 .crt-monitor{
   position:relative;
   background:#1a1a1a;
@@ -53,7 +53,7 @@ body{
   margin:0 auto;
 }
 
-/* ── POWER LED ── */
+
 .power-led{
   position:absolute;
   bottom:16px;
@@ -70,7 +70,7 @@ body{
   50%{opacity:0.7; box-shadow:0 0 4px #FF6600, 0 0 8px rgba(255,102,0,0.3);}
 }
 
-/* ── SCREEN ── */
+
 .crt-screen{
   position:relative;
   background:var(--screen-bg);
@@ -79,7 +79,7 @@ body{
   animation:power-on 1.2s ease-out;
 }
 
-/* ── SCANLINES ── */
+
 .crt-screen::before{
   content:"";
   position:absolute; inset:0;
@@ -93,7 +93,7 @@ body{
   );
 }
 
-/* ── VIGNETTE ── */
+
 .crt-screen::after{
   content:"";
   position:absolute; inset:0;
@@ -226,13 +226,7 @@ footer{
 </div>
 
 <script>
-/* ───────────────────────────────────────────────
-   ДОБАВЛЯЙ ПЕРСОНАЖЕЙ СЮДА.
-   slug  — латиницей, идёт в ссылку (#gary)
-   alive — true/false, меняет цвет статуса
-   fields   — любые пары [ключ, значение]
-   sections — любые блоки с заголовком и текстом
-   ─────────────────────────────────────────────── */
+
 const CHARACTERS = [
   {
     slug: 'gary',
