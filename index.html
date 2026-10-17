@@ -161,6 +161,45 @@ body{
 .status-alive{color:#8CA87C; text-shadow:0 0 4px rgba(140,168,124,0.4);}
 .status-dead{color:var(--red); text-shadow:0 0 4px rgba(255,102,51,0.4);}
 
+/* ── КНОПКА ПЕРЕКЛЮЧЕНИЯ ВИДА ── */
+.photo-col{display:flex; flex-direction:column; gap:12px;}
+.btn{
+  font-family:'VT323','Share Tech Mono',monospace; font-size:18px;
+  letter-spacing:0.04em; color:var(--amber); background:transparent;
+  border:1px solid var(--amber-dim); padding:4px 12px; cursor:pointer;
+  text-shadow:0 0 4px var(--amber-glow); text-align:center;
+}
+.btn:hover{background:var(--amber); color:var(--screen-bg); text-shadow:none;}
+.btn.on{background:var(--amber); color:var(--screen-bg); text-shadow:none;}
+.btn:disabled{color:var(--dim); border-color:var(--line); cursor:default; text-shadow:none;}
+.btn:disabled:hover{background:transparent; color:var(--dim);}
+
+/* ── ВЗАИМООТНОШЕНИЯ ── */
+.rels{display:none; margin-bottom:44px;}
+.rel-mode .rels{display:block;}
+.rel-mode .field-grid, .rel-mode .sections{display:none;}
+.rel-table{border:1px solid var(--line);}
+.rel-head, .rel-row{
+  display:grid; grid-template-columns:200px 1fr 130px; align-items:center;
+}
+.rel-head{
+  border-bottom:1px solid var(--line); font-size:11px; color:var(--amber-dim);
+}
+.rel-head > div{padding:10px 16px;}
+.rel-item{border-bottom:1px solid var(--line);}
+.rel-item:last-child{border-bottom:none;}
+.rel-name{padding:12px 16px; font-size:17px; font-style:italic; overflow-wrap:anywhere;}
+.rel-name a{color:var(--paper); text-decoration:none; border-bottom:1px dotted var(--dim);}
+.rel-name a:hover{color:var(--amber);}
+.rel-op{padding:12px 16px; font-size:17px; color:var(--dim);}
+.rel-act{padding:8px 16px 8px 0;}
+.rel-act .btn{width:100%; font-size:16px; padding:2px 8px;}
+.rel-detail{
+  display:none; padding:4px 16px 18px; border-top:1px dashed var(--line);
+}
+.rel-item.open .rel-detail{display:block;}
+.rel-detail .body-text{margin-top:12px;}
+
 section{margin-bottom:44px;}
 .sec-head{
   font-size:12px; color:var(--red); margin-bottom:14px;
@@ -184,6 +223,11 @@ footer{
   .photo{max-width:200px;}
   .title-block h1{font-size:36px;}
   .frow{grid-template-columns:110px 1fr;}
+  .photo-col{max-width:200px;}
+  .rel-head{display:none;}
+  .rel-row{grid-template-columns:1fr 110px;}
+  .rel-op{grid-column:1 / -1; grid-row:2; padding-top:0;}
+  .rel-act{grid-column:2; grid-row:1; padding-right:12px;}
 }
 </style>
 </head>
@@ -286,9 +330,38 @@ function show(slug) {
       ${paragraphs(s.text, s.placeholder ? ' placeholder' : '')}
     </section>`).join('');
 
+  const relations = c.relations || [];
+  const slugs = new Set(list.map(x => x.slug));
+
+  const relRows = relations.map((r, i) => {
+    const name = r.slug && slugs.has(r.slug)
+      ? `<a href="#${esc(r.slug)}">${esc(r.name)}</a>`
+      : esc(r.name);
+    return `
+      <div class="rel-item" data-i="${i}">
+        <div class="rel-row">
+          <div class="rel-name">${name}</div>
+          <div class="rel-op">${esc(r.opinion)}</div>
+          <div class="rel-act"><button class="btn term" type="button" data-rel="${i}" aria-expanded="false">ОТКРЫТЬ</button></div>
+        </div>
+        <div class="rel-detail">${paragraphs(r.text || '// ЗАПИСЬ ОТСУТСТВУЕТ', r.text ? '' : ' placeholder')}</div>
+      </div>`;
+  }).join('');
+
+  const relBlock = relations.length
+    ? `<div class="rel-table">
+         <div class="rel-head term"><div>ИМЯ</div><div>МНЕНИЕ</div><div></div></div>
+         ${relRows}
+       </div>`
+    : '<p class="msg term">// ДАННЫЕ О ВЗАИМООТНОШЕНИЯХ ОТСУТСТВУЮТ</p>';
+
+  dossier.classList.remove('rel-mode');
   dossier.innerHTML = `
     <div class="profile">
-      <div class="photo empty" id="photo"><span class="term">[ Фото отсутствует ]</span></div>
+      <div class="photo-col">
+        <div class="photo empty" id="photo"><span class="term">[ Фото отсутствует ]</span></div>
+        <button class="btn term" type="button" id="rel-toggle"${relations.length ? '' : ' disabled'}>ВЗАИМООТНОШЕНИЯ</button>
+      </div>
       <div>
         <div class="title-block">
           <div class="over term">// ДОСЬЕ</div>
@@ -297,7 +370,27 @@ function show(slug) {
         <div class="field-grid">${rows}</div>
       </div>
     </div>
-    ${sections}`;
+    <div class="rels">
+      <div class="sec-head term">ВЗАИМООТНОШЕНИЯ</div>
+      ${relBlock}
+    </div>
+    <div class="sections">${sections}</div>`;
+
+  // переключатель: анкета <-> взаимоотношения
+  const toggle = document.getElementById('rel-toggle');
+  toggle.addEventListener('click', () => {
+    const on = dossier.classList.toggle('rel-mode');
+    toggle.classList.toggle('on', on);
+    toggle.textContent = on ? 'ДОСЬЕ' : 'ВЗАИМООТНОШЕНИЯ';
+  });
+
+  // открыть / закрыть мнение
+  dossier.querySelectorAll('[data-rel]').forEach(btn =>
+    btn.addEventListener('click', () => {
+      const open = btn.closest('.rel-item').classList.toggle('open');
+      btn.textContent = open ? 'СКРЫТЬ' : 'ОТКРЫТЬ';
+      btn.setAttribute('aria-expanded', open);
+    }));
 
   // фото: если файл указан и грузится — подменяем заглушку
   if (c.photo) {
