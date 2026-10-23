@@ -199,6 +199,14 @@ body{
 }
 .rel-item.open .rel-detail{display:block;}
 .rel-detail .body-text{margin-top:12px;}
+.rel-categories{display:flex;flex-wrap:wrap;gap:7px;padding:12px;border:1px solid var(--line);border-bottom:0;}
+.rel-category{font-family:'VT323','Share Tech Mono',monospace;font-size:17px;letter-spacing:.04em;color:var(--dim);background:transparent;border:1px solid var(--line);padding:5px 10px;cursor:pointer;}
+.rel-category:hover,.rel-category.active{color:var(--screen-bg);background:var(--amber);border-color:var(--amber);text-shadow:none;}
+.rel-category .count{font-size:14px;opacity:.8;margin-left:4px;}
+.rel-category-panel[hidden]{display:none!important;}
+.rel-category-empty{padding:18px 16px;color:var(--dim);font-size:16px;}
+.rel-category-title{font-size:12px;color:var(--red);padding:12px 16px;border:1px solid var(--line);border-bottom:0;}
+
 
 section{margin-bottom:44px;}
 .sec-head{
@@ -332,27 +340,43 @@ function show(slug) {
 
   const relations = c.relations || [];
   const slugs = new Set(list.map(x => x.slug));
-
-  const relRows = relations.map((r, i) => {
-    const name = r.slug && slugs.has(r.slug)
-      ? `<a href="#${esc(r.slug)}">${esc(r.name)}</a>`
-      : esc(r.name);
-    return `
-      <div class="rel-item" data-i="${i}">
-        <div class="rel-row">
-          <div class="rel-name">${name}</div>
-          <div class="rel-op">${esc(r.opinion)}</div>
-          <div class="rel-act"><button class="btn term" type="button" data-rel="${i}" aria-expanded="false">ОТКРЫТЬ</button></div>
-        </div>
-        <div class="rel-detail">${paragraphs(r.text || '// ЗАПИСЬ ОТСУТСТВУЕТ', r.text ? '' : ' placeholder')}</div>
-      </div>`;
-  }).join('');
+  const categories = ['ARAR','MNHR','GCCP','HABR','KLBR','STAR','GSCC','FALKE','ADLR'];
+  const categorized = relations.map((r, i) => ({
+    ...r,
+    _index: i,
+    // Старые записи без category сохраняются в отдельной вкладке, ничего не теряется.
+    _category: categories.includes(r.category) ? r.category : 'UNASSIGNED'
+  }));
+  const categoryLabels = [...categories, 'UNASSIGNED'];
+  const categoryNames = { UNASSIGNED: 'БЕЗ КАТЕГОРИИ' };
 
   const relBlock = relations.length
-    ? `<div class="rel-table">
-         <div class="rel-head term"><div>ИМЯ</div><div>МНЕНИЕ</div><div></div></div>
-         ${relRows}
-       </div>`
+    ? `<div class="rel-categories term" role="tablist" aria-label="Категории взаимоотношений">
+         ${categoryLabels.map((cat, i) => {
+           const count = categorized.filter(r => r._category === cat).length;
+           return `<button class="rel-category${i === 0 ? ' active' : ''}" type="button" role="tab" data-category="${cat}" aria-selected="${i === 0 ? 'true' : 'false'}">${cat === 'UNASSIGNED' ? categoryNames[cat] : cat}<span class="count">${count}</span></button>`;
+         }).join('')}
+       </div>
+       ${categoryLabels.map((cat, catIndex) => {
+         const items = categorized.filter(r => r._category === cat);
+         const rows = items.map(r => {
+           const name = r.slug && slugs.has(r.slug)
+             ? `<a href="#${esc(r.slug)}">${esc(r.name)}</a>`
+             : esc(r.name);
+           return `
+             <div class="rel-item" data-i="${r._index}">
+               <div class="rel-row">
+                 <div class="rel-name">${name}</div>
+                 <div class="rel-op">${esc(r.opinion || 'Не указано')}</div>
+                 <div class="rel-act"><button class="btn term" type="button" data-rel="${r._index}" aria-expanded="false">ОТКРЫТЬ</button></div>
+               </div>
+               <div class="rel-detail">${paragraphs(r.text || '// ЗАПИСЬ ОТСУТСТВУЕТ', r.text ? '' : ' placeholder')}</div>
+             </div>`;
+         }).join('');
+         return `<div class="rel-category-panel" role="tabpanel" data-panel="${cat}"${catIndex === 0 ? '' : ' hidden'}>
+           ${items.length ? `<div class="rel-table"><div class="rel-head term"><div>ИМЯ</div><div>МНЕНИЕ</div><div></div></div>${rows}</div>` : `<p class="rel-category-empty term">// В ЭТОЙ КАТЕГОРИИ НЕТ ЗАПИСЕЙ</p>`}
+         </div>`;
+       }).join('')}`
     : '<p class="msg term">// ДАННЫЕ О ВЗАИМООТНОШЕНИЯХ ОТСУТСТВУЮТ</p>';
 
   dossier.classList.remove('rel-mode');
@@ -383,6 +407,20 @@ function show(slug) {
     toggle.classList.toggle('on', on);
     toggle.textContent = on ? 'ДОСЬЕ' : 'ВЗАИМООТНОШЕНИЯ';
   });
+
+  // Переключение категорий отношений
+  dossier.querySelectorAll('[data-category]').forEach(btn =>
+    btn.addEventListener('click', () => {
+      const category = btn.dataset.category;
+      dossier.querySelectorAll('[data-category]').forEach(tab => {
+        const active = tab === btn;
+        tab.classList.toggle('active', active);
+        tab.setAttribute('aria-selected', String(active));
+      });
+      dossier.querySelectorAll('[data-panel]').forEach(panel => {
+        panel.hidden = panel.dataset.panel !== category;
+      });
+    }));
 
   // открыть / закрыть мнение
   dossier.querySelectorAll('[data-rel]').forEach(btn =>
