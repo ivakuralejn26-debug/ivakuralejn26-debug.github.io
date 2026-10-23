@@ -340,7 +340,7 @@ function show(slug) {
 
   const relations = c.relations || [];
   const slugs = new Set(list.map(x => x.slug));
-  const categories = ['ARAR','MNHR','GCCP','HABR','KLBR','STAR','GSCC','GSSC','FALKE','ADLR','EULR'];
+  const categories = ['ARAR','MNHR','GCCP','HABR','KLBR','STAR','GSCC','GSSC','GSCP','FALKE','ADLR','EULR'];
   const categorized = relations.map((r, i) => ({
     ...r,
     _index: i,
