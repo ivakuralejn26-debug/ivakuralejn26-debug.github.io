@@ -340,20 +340,18 @@ function show(slug) {
 
   const relations = c.relations || [];
   const slugs = new Set(list.map(x => x.slug));
-  const categories = ['ARAR','MNHR','GCCP','HABR','KLBR','STAR','GSCC','FALKE','ADLR','EULR'];
+  const categories = ['ARAR','MNHR','GCCP','HABR','KLBR','STAR','GSCC','GSSC','FALKE','ADLR','EULR'];
   const categorized = relations.map((r, i) => ({
     ...r,
     _index: i,
-    // Старые записи без category сохраняются в отдельной вкладке, ничего не теряется.
     _category: categories.includes(r.category) ? r.category : 'UNASSIGNED'
   }));
-  const categoryLabels = [...categories, 'UNASSIGNED'];
-  const categoryNames = { UNASSIGNED: 'БЕЗ КАТЕГОРИИ' };
+  const categoryLabels = categories;
 
   const relBlock = `<div class="rel-categories term" role="tablist" aria-label="Категории взаимоотношений">
          ${categoryLabels.map((cat, i) => {
            const count = categorized.filter(r => r._category === cat).length;
-           return `<button class="rel-category${i === 0 ? ' active' : ''}" type="button" role="tab" data-category="${cat}" aria-selected="${i === 0 ? 'true' : 'false'}">${cat === 'UNASSIGNED' ? categoryNames[cat] : cat}<span class="count">${count}</span></button>`;
+           return `<button class="rel-category${i === 0 ? ' active' : ''}" type="button" role="tab" data-category="${cat}" aria-selected="${i === 0 ? 'true' : 'false'}">${cat}<span class="count">${count}</span></button>`;
          }).join('')}
        </div>
        ${categoryLabels.map((cat, catIndex) => {
