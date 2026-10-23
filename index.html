@@ -350,8 +350,7 @@ function show(slug) {
   const categoryLabels = [...categories, 'UNASSIGNED'];
   const categoryNames = { UNASSIGNED: 'БЕЗ КАТЕГОРИИ' };
 
-  const relBlock = relations.length
-    ? `<div class="rel-categories term" role="tablist" aria-label="Категории взаимоотношений">
+  const relBlock = `<div class="rel-categories term" role="tablist" aria-label="Категории взаимоотношений">
          ${categoryLabels.map((cat, i) => {
            const count = categorized.filter(r => r._category === cat).length;
            return `<button class="rel-category${i === 0 ? ' active' : ''}" type="button" role="tab" data-category="${cat}" aria-selected="${i === 0 ? 'true' : 'false'}">${cat === 'UNASSIGNED' ? categoryNames[cat] : cat}<span class="count">${count}</span></button>`;
@@ -376,15 +375,14 @@ function show(slug) {
          return `<div class="rel-category-panel" role="tabpanel" data-panel="${cat}"${catIndex === 0 ? '' : ' hidden'}>
            ${items.length ? `<div class="rel-table"><div class="rel-head term"><div>ИМЯ</div><div>МНЕНИЕ</div><div></div></div>${rows}</div>` : `<p class="rel-category-empty term">// В ЭТОЙ КАТЕГОРИИ НЕТ ЗАПИСЕЙ</p>`}
          </div>`;
-       }).join('')}`
-    : '<p class="msg term">// ДАННЫЕ О ВЗАИМООТНОШЕНИЯХ ОТСУТСТВУЮТ</p>';
+       }).join('')}`;
 
   dossier.classList.remove('rel-mode');
   dossier.innerHTML = `
     <div class="profile">
       <div class="photo-col">
         <div class="photo empty" id="photo"><span class="term">[ Фото отсутствует ]</span></div>
-        <button class="btn term" type="button" id="rel-toggle"${relations.length ? '' : ' disabled'}>ВЗАИМООТНОШЕНИЯ</button>
+        <button class="btn term" type="button" id="rel-toggle">ВЗАИМООТНОШЕНИЯ</button>
       </div>
       <div>
         <div class="title-block">
